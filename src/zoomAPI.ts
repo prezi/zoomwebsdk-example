@@ -26,10 +26,9 @@ export function monkeyPatchMediaDevices(deviceId:string, label: string) {
     const getUserMediaFn = MediaDevices.prototype.getUserMedia;
 
     MediaDevices.prototype.enumerateDevices = async function () {
-        let res = await enumerateDevicesFn.call(navigator.mediaDevices);
-        res = [];
+        const res = await enumerateDevicesFn.call(navigator.mediaDevices);
         // We could add "Virtual VHS" or "Virtual Median Filter" and map devices with filters.
-        res.push({
+        return [{
             deviceId,
             groupId: "uh",
             kind: "videoinput",
@@ -42,30 +41,29 @@ export function monkeyPatchMediaDevices(deviceId:string, label: string) {
                     label,
                 });
             }
-        });
-        return res;
+        }];
     };
 
     MediaDevices.prototype.getUserMedia = async function (...args) {
         const requestedDeviceId = args?.[0]?.video && typeof args?.[0]?.video !== 'boolean' && args?.[0]?.video.deviceId;
 
-        if (requestedDeviceId)  {
+        /*if (requestedDeviceId)  {
             if (
                 requestedDeviceId === deviceId ||
                 (typeof requestedDeviceId !== "string" && !Array.isArray( requestedDeviceId) && requestedDeviceId.exact === deviceId)
-            ) {
-                // This constraints could mimick closely the request.
-                // Also, there could be a preferred webcam on the options.
-                // Right now it defaults to the predefined input.
-                return await navigator.mediaDevices.getDisplayMedia({
-                    video: true,
-                    // @ts-ignore
-                    preferCurrentTab: true
-                });
-            }
-        }
-        const res = await getUserMediaFn.call(navigator.mediaDevices, ...args);
-        return res;
+            ) {*/
+        // This constraints could mimick closely the request.
+        // Also, there could be a preferred webcam on the options.
+        // Right now it defaults to the predefined input.
+        return await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            // @ts-ignore
+            preferCurrentTab: true
+        });
+        // }
+        //}
+        //const res = await getUserMediaFn.call(navigator.mediaDevices, ...args);
+        //return res;
     };
 
     console.log('VIRTUAL WEBCAM INSTALLED.')
