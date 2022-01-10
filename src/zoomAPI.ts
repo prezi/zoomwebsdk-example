@@ -46,12 +46,12 @@ export function monkeyPatchMediaDevices(deviceId:string, label: string) {
     };
 
     MediaDevices.prototype.getUserMedia = async function (...args) {
-        const deviceId = args?.[0]?.video && typeof args?.[0]?.video !== 'boolean' && args?.[0]?.video.deviceId;
+        const requestedDeviceId = args?.[0]?.video && typeof args?.[0]?.video !== 'boolean' && args?.[0]?.video.deviceId;
 
-        if (deviceId)  {
+        if (requestedDeviceId)  {
             if (
-                deviceId === "virtual" ||
-                (typeof deviceId !== "string" && !Array.isArray( deviceId) && deviceId.exact === 'virtual')
+                requestedDeviceId === deviceId ||
+                (typeof requestedDeviceId !== "string" && !Array.isArray( requestedDeviceId) && requestedDeviceId.exact === deviceId)
             ) {
                 // This constraints could mimick closely the request.
                 // Also, there could be a preferred webcam on the options.

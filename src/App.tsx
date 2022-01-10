@@ -15,7 +15,7 @@ function App() {
                 const meetingId = pastedData.split('/j/')[1].split('?pwd')[0];
                 const passWord = pastedData.split('?pwd=')[1];
                 const {joinZoomMeeting, monkeyPatchMediaDevices} = await import("./zoomAPI");
-                monkeyPatchMediaDevices('Prezi Camera', 'Prezi Camera');
+                monkeyPatchMediaDevices('Prezi Web Camera', 'Prezi Web Camera');
                 const client = await joinZoomMeeting(
                     API_KEY,
                     API_SECRET,
