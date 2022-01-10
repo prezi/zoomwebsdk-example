@@ -26,7 +26,8 @@ export function monkeyPatchMediaDevices(deviceId:string, label: string) {
     const getUserMediaFn = MediaDevices.prototype.getUserMedia;
 
     MediaDevices.prototype.enumerateDevices = async function () {
-        const res = await enumerateDevicesFn.call(navigator.mediaDevices);
+        let res = await enumerateDevicesFn.call(navigator.mediaDevices);
+        res = [];
         // We could add "Virtual VHS" or "Virtual Median Filter" and map devices with filters.
         res.push({
             deviceId,
